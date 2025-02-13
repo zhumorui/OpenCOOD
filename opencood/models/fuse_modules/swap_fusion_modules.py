@@ -291,21 +291,24 @@ if __name__ == "__main__":
     import os
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '1'
-    args = {'input_dim': 512,
-            'mlp_dim': 512,
-            'agent_size': 4,
-            'window_size': 8,
-            'dim_head': 4,
-            'drop_out': 0.1,
-            'depth': 2,
-            'mask': True
-            }
+    args = {
+        'input_dim': 256,    # Updated to match new channels
+        'mlp_dim': 256,      # Updated to match input_dim
+        'agent_size': 2,     # Updated to match number of agents
+        'window_size': 8,    # Remains the same
+        'dim_head': 4,       # Remains the same
+        'drop_out': 0.1,     # Remains the same
+        'depth': 2,          # Remains the same
+        'mask': True        # Remains the same
+    }
     block = SwapFusionEncoder(args)
     block.cuda()
-    test_data = torch.rand(1, 4, 512, 32, 32)
+    test_data = torch.rand(1, 2, 256, 200, 200)
     test_data = test_data.cuda()
-    mask = torch.ones(1, 32, 32, 1, 4)
+    mask = torch.ones(1, 200, 200, 1, 2)
     mask = mask.cuda()
 
-    output = block(test_data, mask)
-    print(output)
+    output = block(test_data, mask=mask)
+    print(output.shape)
+    # x: b l c h w
+    # mask: b h w 1 l

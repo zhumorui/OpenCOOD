@@ -100,12 +100,12 @@ model:
 
     fax_fusion:
       input_dim: 256
-      mlp_dim: 256
-      agent_size: *max_cav
-      window_size: 4
-      dim_head: 32
+      mlp_dim: 128
+      agent_size: 2
+      window_size: 8
+      dim_head: 8
       drop_out: 0.1
-      depth: 3
+      depth: 2
       mask: true
 
 
