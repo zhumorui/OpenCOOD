@@ -21,6 +21,7 @@ class SpatialFusion(nn.Module):
 
     def forward(self, x, record_len):
         # x: B, C, H, W, split x:[(B1, C, W, H), (B2, C, W, H)]
+        x = x.squeeze(0)
         split_x = self.regroup(x, record_len)
         out = []
 
@@ -28,3 +29,20 @@ class SpatialFusion(nn.Module):
             xx = torch.max(xx, dim=0, keepdim=True)[0]
             out.append(xx)
         return torch.cat(out, dim=0)
+
+
+if __name__ == "__main__":
+    import os
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+    
+    test_data = torch.rand(1, 2, 256, 200, 200)
+    test_data = test_data.cuda()
+    
+    record_len = torch.tensor([2]).cuda()
+
+    model = SpatialFusion()
+    model.cuda()
+    
+    output = model(test_data, record_len)
+    print(f"Input shape: {test_data.shape}")
+    print(f"Output shape: {output.shape}")
